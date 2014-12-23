@@ -2,6 +2,8 @@
 
 from collections import Counter
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os
 import sys
@@ -15,7 +17,10 @@ def create_time_fig(in_file, out_file, title):
     with open(in_file ,'r') as dat:
         for line in dat:
             if len(line) > 0:
+                line = line.rstrip()
                 sp = line.split(' ')
+                if len(sp) < 4:
+                    continue
                 x = int(sp[0])
                 x_arr.append(x)
                 min_y.append(float(sp[1]))
@@ -58,6 +63,8 @@ def create_cdf_fig(in_file, out_file, title):
         for line in dat:
             if len(line) > 0:
                 sp = line.split(' ')
+                if len(sp) < 4:
+                    continue
                 min_y.append(float(sp[1]))
                 avg_y.append(float(sp[2]))
                 max_y.append(float(sp[3]))
@@ -70,6 +77,7 @@ def create_cdf_fig(in_file, out_file, title):
     plt.plot(avg_x, avg__y, label="Avg")
     plt.plot(max_x, max__y, label="Max")
 
+    matplotlib.use('Agg')
     plt.legend(loc='upper left')
 
     plt.xlabel("Fraction")
@@ -86,6 +94,7 @@ def get_title(in_file):
     return in_file.split('.')[0]
 
 if len(sys.argv) != 3:
+    print "Expected: ./generate_figures <in_file> <out_dir>"
     sys.exit(1)
 
 in_file = sys.argv[1]
